@@ -1,5 +1,8 @@
 const cl = (txt)=> console.log(txt);
+import { Hono } from "https://deno.land/x/hono@v4.3.11/mod.ts";
 import { parse } from "https://deno.land/x/xml@6.0.0/mod.ts";
+
+const app = new Hono()
 const url = Deno.env.get("PANTRY_URL")
 
 FetchRss(); 
@@ -34,3 +37,6 @@ async function Post(url,payload) {
   const res = await fetch(url, {method: "POST", body: JSON.stringify(payload), headers: myHeaders});
   return res;
 }
+
+app.get("/", (c) => {return c.text("Hello")})
+export default { fetch: app.fetch };
