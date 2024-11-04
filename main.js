@@ -1,6 +1,6 @@
 //const cl = (txt)=> console.log(txt);
 import { parse } from "https://deno.land/x/xml@6.0.0/mod.ts";
-const url = Deno.env.get("PANTRY_KEY")
+const url = Deno.env.get("PANTRY_URL")
 
 async function Get(url) {
   const res = await fetch(url); const data = await res.json(); return data;
