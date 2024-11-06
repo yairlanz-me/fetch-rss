@@ -10,8 +10,8 @@ Deno.cron("Cron rss",  "*/10 * * * *", FetchRss)
 
 async function FetchRss(){
   const rssArr =[], rssItems={};
-  const {feeds} = await Get(url+"/rss-feeds")
-  for await (const u of feeds){
+  const rssFeeds = await Get(url+"/rss-feeds")
+  for await (const u of rssFeeds.feeds){
     try {
       const res = await fetch(u.url)
       let XMLdata = await res.text();
