@@ -9,9 +9,9 @@ FetchRss();
 Deno.cron("Cron rss",  "*/10 * * * *", FetchRss)
 
 async function FetchRss(){
-  let rssObj = await Get(url)
-  const rssArr =[]
-  for await (let u of rssObj.feeds){
+  const rssArr =[], rssItems={};
+  const {feeds} = await Get(url+"/rss-feeds")
+  for await (const u of feeds){
     try {
       const res = await fetch(u.url)
       let XMLdata = await res.text();
@@ -22,11 +22,10 @@ async function FetchRss(){
       rssArr.push(items.slice(0,Math.min(30,items.length)))
     } catch {continue}
   }
-  const rssData = rssArr.flat();
-  rssData.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
-  rssObj.data = rssData; rssObj.lastUpdt = new Date();
-  Post(url, rssObj)
-  cl('Refreshed...' + rssObj.lastUpdt.toLocaleString());
+  rssItems.lastUpdt = new Date();
+  rssItems.data = rssArr.flat().sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
+  Post(url+"/rss-items", rssItems)
+  cl('Refreshed...' + rssItems.lastUpdt.toLocaleString());
 } 
 async function Get(url) {
   const res = await fetch(url); const data = await res.json(); return data;
